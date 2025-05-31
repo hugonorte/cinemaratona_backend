@@ -1,3 +1,7 @@
+directive @auth(
+    guards: [String!]
+) on FIELD_DEFINITION
+
 type Query {
     me: User @auth
 }
