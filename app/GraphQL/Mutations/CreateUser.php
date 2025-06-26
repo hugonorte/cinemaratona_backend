@@ -9,10 +9,12 @@ class CreateUser
 {
     public function __invoke($root, array $args): User
     {
+        $input = $args['input'];
+
         return User::create([
-            'name' => $args['name'],
-            'email' => $args['email'],
-            'password' => Hash::make($args['password']),
+            'name' => $input['name'],
+            'email' => $input['email'],
+            'password' => Hash::make($input['password']),
         ]);
     }
 }

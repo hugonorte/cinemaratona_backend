@@ -2,14 +2,33 @@ directive @auth(
     guards: [String!]
 ) on FIELD_DEFINITION
 
+directive @inject(
+    context: String!
+    name: String!
+) repeatable on FIELD_DEFINITION
+
+directive @create(
+    model: String
+    relation: String
+) on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @field(
+    resolver: String!
+) on FIELD_DEFINITION
+
+directive @spread on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
 type Query {
     me: User @auth
+    checkUserWatchedMovie(user_id: ID!, movie_id: ID!): Boolean @field(resolver: "App\\GraphQL\\Queries\\CheckUserWatchedMovie")
 }
 
 type Mutation {
-    register(input: RegisterInput!): AuthPayload!
+    createUser(input: RegisterInput!): User! @field(resolver: "App\\GraphQL\\Mutations\\CreateUser")
     login(email: String!, password: String!): AuthPayload!
     refreshToken(refresh_token: String!): AuthPayload!
+    createReview(input: CreateReviewInput!): Review! @field(resolver: "App\\GraphQL\\Mutations\\CreateReview")
+    markMovieAsWatched(input: MarkAsWatchedInput!): MarkAsWatchedPayload! @field(resolver: "App\\GraphQL\\Mutations\\MarkMovieAsWatched")
 }
 
 type User {
@@ -21,14 +40,14 @@ type User {
 }
 
 input RegisterInput {
-name: String!
-email: String!
-password: String!
+    name: String!
+    email: String!
+    password: String!
 }
 
 input LoginInput {
-email: String!
-password: String!
+    email: String!
+    password: String!
 }
 
 type AuthPayload {
@@ -36,3 +55,36 @@ type AuthPayload {
     refresh_token: String!
     user: User!
 }
+
+type Review {
+    id: ID!
+    movie_id: ID!
+    review: String
+    rating: Int
+    user_id: ID
+}
+
+type MarkAsWatchedPayload {
+    movie_id: ID!
+    user_id: ID!
+}
+
+input CreateReviewInput {
+    movie_id_from_api: ID!
+    title: String
+    release_date: String
+    poster: String
+    review: String
+    rating: Int!
+    user_id: ID
+}
+
+input MarkAsWatchedInput {
+    movie_id_from_api: ID!
+    user_id: ID
+    title: String
+    release_date: String
+    poster: String
+}
+
+

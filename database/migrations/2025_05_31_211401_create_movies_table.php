@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable(false);
+            $table->integer('movie_id_from_api');
+            $table->string('title');
             $table->date('release_date')->nullable();
             $table->string('poster')->nullable();
             $table->timestamps();

@@ -61,4 +61,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Review::class);
     }
+
+    /**
+     * Get the Watched Movies.
+     */
+    public function watched_movies(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Movie::class);
+    }
 }
