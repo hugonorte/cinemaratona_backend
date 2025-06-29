@@ -6,9 +6,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class UserWatchedMovie extends Model
+class UserWatchedMovie extends Pivot
 {
+    protected $table = 'user_watched_movies';
     use HasFactory;
 
     protected $fillable = [

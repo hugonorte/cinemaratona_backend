@@ -21,6 +21,8 @@ class Movie extends Model
      */
     public function users_watched(): BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'user_watched_movies', 'movie_id', 'user_id')
+            ->withTimestamps()
+            ->using(UserWatchedMovie::class);
     }
 }

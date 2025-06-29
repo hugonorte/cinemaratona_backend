@@ -3,14 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -52,12 +55,12 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
-    public function getJWTCustomClaims()
+    public function getJWTCustomClaims(): array
     {
         return [];
     }
 
-    public function reviews()
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
@@ -65,8 +68,10 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Get the Watched Movies.
      */
-    public function watched_movies(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function watchedMovies(): BelongsToMany
     {
-        return $this->hasMany(Movie::class);
+        return $this->belongsToMany(Movie::class, 'user_watched_movies', 'user_id', 'movie_id')
+            ->withTimestamps()
+            ->using(UserWatchedMovie::class);
     }
 }

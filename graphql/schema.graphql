@@ -21,6 +21,8 @@ directive @spread on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
 type Query {
     me: User @auth
     checkUserWatchedMovie(user_id: ID!, movie_id: ID!): Boolean @field(resolver: "App\\GraphQL\\Queries\\CheckUserWatchedMovie")
+    watchedMoviesByUser(user_id: ID!): WatchedMoviesPayload!
+    @field(resolver: "App\\GraphQL\\Queries\\WatchedMoviesByUser")
 }
 
 type Mutation {
@@ -37,6 +39,15 @@ type User {
     email: String!
     created_at: String!
     updated_at: String!
+}
+
+type Movie {
+    id: ID!
+    title: String!
+    release_date: String
+    poster: String
+    created_at: String
+    updated_at: String
 }
 
 input RegisterInput {
@@ -69,6 +80,11 @@ type MarkAsWatchedPayload {
     user_id: ID!
 }
 
+type WatchedMoviesPayload {
+    total: Int!
+    movies: [Movie!]!
+}
+
 input CreateReviewInput {
     movie_id_from_api: ID!
     title: String
@@ -85,6 +101,11 @@ input MarkAsWatchedInput {
     title: String
     release_date: String
     poster: String
+}
+
+type TotalMoviesWatched {
+    movies: [Movie!]!
+    total: Int!
 }
 
 
